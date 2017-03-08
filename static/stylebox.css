@@ -1,0 +1,81 @@
+.container {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.outter {
+    background-color: darkgray;
+    width: 450px;
+    height: 150px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#inner00 {
+    background-color: darkcyan;
+    /*float: left;*/
+    position: absolute;
+}
+
+#inner01 {
+    background-color: darkmagenta;
+    position: relative;
+    left: 150px;
+    top: 0px;
+}
+
+#inner02 {
+    background-color: darkolivegreen;
+    position: relative;
+    left: 300px;
+    top: -150px;
+}
+
+#inner10 {
+    background-color: lightseagreen;
+    /*float: left;*/
+    position: absolute;
+}
+
+#inner11 {
+    background-color: cyan;
+    position: relative;
+    left: 150px;
+    top: 0px;
+}
+
+#inner12 {
+    background-color: #000000;
+    position: relative;
+    left: 300px;
+    top: -150px;
+}
+
+#inner20 {
+    background-color: darkcyan;
+    /*float: left;*/
+    position: absolute;
+}
+
+#inner21 {
+    background-color: darkmagenta;
+    position: relative;
+    left: 150px;
+    top: 0px;
+}
+
+#inner22 {
+    background-color: #CC0011;
+    position: relative;
+    left: 300px;
+    top: -150px;
+}
+
+.size {
+    width: 150px;
+    height: 150px;
+}
