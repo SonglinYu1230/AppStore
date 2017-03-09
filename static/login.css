@@ -1,0 +1,54 @@
+body {
+    background-color: #4B4B4B;
+}
+
+#loginform {
+    background-color: darkgray;
+    text-align: center;
+    color: white;
+    border-width: thin;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 15px;
+    width: 600px;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+input {
+    /*margin: 20px;
+  padding: 10px;*/
+    border-radius: 8px;
+}
+
+#username {
+    width: 90%;
+    height: 30px;
+    margin-top: 30px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+#password {
+    width: 90%;
+    height: 30px;
+    margin-top: 15px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.submit {
+    background-color: #2DCC70;
+    width: 90%;
+    height: 45px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border-width: 1px;
+    font-size: 20px;
+}
+
+input:focus {
+    outline: 0;
+}

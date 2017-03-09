@@ -16,11 +16,15 @@ def hello_world():
 def login():
     print(__name__)
     error = None
+    if request.method == 'GET':
+        return render_template('login.html')
     if request.method == 'POST':
+        print('hello')
         data = {'name': 'Tom',
                 "address": "NYC"}
         # return Response(json.dumps(data), mimetype='application/json')
         return  jsonify(data)
+        # return render_template('homepage.html')
     return render_template('login.html', error=error)
 
 @app.route('/user/<name>')
