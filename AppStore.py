@@ -7,10 +7,8 @@ bootstrap = Bootstrap(app)
 
 @app.route('/')
 def hello_world():
-    # print('login')
-    return render_template('stylebox.html')
-    # return send_static_file('stylebox.html')
-    # return 'Hello World!'
+    print('login')
+    return render_template('login.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -18,14 +16,13 @@ def login():
     error = None
     if request.method == 'GET':
         return render_template('login.html')
-    if request.method == 'POST':
+    elif request.method == 'POST':
         print('hello')
         data = {'name': 'Tom',
                 "address": "NYC"}
-        # return Response(json.dumps(data), mimetype='application/json')
-        return  jsonify(data)
-        # return render_template('homepage.html')
-    return render_template('login.html', error=error)
+        return render_template('homepage.html')
+    else:
+        abort()
 
 @app.route('/user/<name>')
 def user(name):

@@ -1,0 +1,86 @@
+body {
+    background-color: #DEDEDE;
+}
+
+.container {
+    position: relative;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+}
+
+.common {
+    background-color: lightcoral;
+    width: 33.3333333333%;
+    height: 480px;
+    float: left;
+}
+
+#upload {
+    background-color: #F8BA0B;
+    position: relative;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    /*opacity: 0;*/
+}
+
+#upload:hover {
+    background-color: darkgoldenrod;
+}
+
+.inputfile {
+    background-color: red;
+    position: relative;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    opacity: 0;
+}
+
+.inputfile+label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    display: inline-block;
+}
+
+.inputfile:focus+label,
+.inputfile+label:hover {
+    background-color: darkgoldenrod;
+}
+
+
+/*upload:focus {
+    background-color: darkgoldenrod;
+}*/
+
+.inputfile+label {
+    cursor: pointer;
+    /* "hand" cursor */
+}
+
+.inputfile:focus+label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.product {
+    background-color: cyan;
+    margin: auto;
+    position: relative;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    float: left;
+}
