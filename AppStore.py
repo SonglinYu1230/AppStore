@@ -7,22 +7,30 @@ bootstrap = Bootstrap(app)
 
 @app.route('/')
 def hello_world():
-    print('login')
-    return render_template('login.html')
+    return redirect('/login')
+    # return render_template('login.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print(__name__)
+    print(request)
+    print(request.form)
     error = None
     if request.method == 'GET':
         return render_template('login.html')
     elif request.method == 'POST':
-        print('hello')
-        data = {'name': 'Tom',
-                "address": "NYC"}
         return render_template('homepage.html')
     else:
         abort()
+
+@app.route('/app/data', methods=['POST'])
+def handleFile():
+    print(request)
+    print('request.files')
+    print(request.files)
+    imfile = request.files['ipa']
+    imfile.save("/Users/Yu/Desktop/1.ipa")
+    print(request.content_length)
+    return jsonify({'status': 'OK'})
 
 @app.route('/user/<name>')
 def user(name):
