@@ -10,6 +10,14 @@ def hello_world():
     return redirect('/login')
     # return render_template('login.html')
 
+@app.route('/test')
+def test():
+    return render_template('test.html')
+
+@app.route('/open')
+def open():
+    return render_template('open.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     print(request)
@@ -25,6 +33,7 @@ def login():
 @app.route('/app/data', methods=['POST'])
 def handleFile():
     print(request)
+    print(request.form)
     print('request.files')
     print(request.files)
     imfile = request.files['ipa']
