@@ -25,7 +25,7 @@ function login() {
 function myChange() {
     oFiles = document.getElementById("file").files;
     f = oFiles[0];
-    f = extractPlist(f);
+    // f = extractPlist(f);
     uploadPlist(f);
 }
 
@@ -49,10 +49,15 @@ function uploadPlist(file) {
     formData.append('ipa', file);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/app/plist', true);
+    xhr.open('POST', 'http://www.163.com/', true);
     xhr.onload = function(e) {
-
+        console.log(e)
     };
+    xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+        alert(xhr.responseText);
+    }
+}
     xhr.send(formData);
 }
 

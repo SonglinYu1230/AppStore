@@ -1,18 +1,12 @@
 from flask import Flask, request, session, render_template, \
         url_for, abort, flash, Response, jsonify, redirect
-from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
-bootstrap = Bootstrap(app)
 
 @app.route('/')
 def hello_world():
     return redirect('/login')
     # return render_template('login.html')
-
-@app.route('/test')
-def test():
-    return render_template('test.html')
 
 @app.route('/open')
 def open():
