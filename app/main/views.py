@@ -1,18 +1,25 @@
-from flask import Flask, request, session, render_template, \
-        url_for, abort, flash, Response, jsonify, redirect
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Created by why001 on 14/05/2017
 
-app = Flask(__name__)
+from flask import  request, session, render_template, \
+        url_for, abort, Response, jsonify, redirect
 
-@app.route('/')
+from . import main
+from .. import db
+# from ..models import User
+
+@main.route('/')
 def hello_world():
-    return redirect('/login')
+    return '<h1>Hello World</h1>'
+    # return redirect('/login')
     # return render_template('login.html')
 
-@app.route('/open')
+@main.route('/open')
 def open():
     return render_template('open.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@main.route('/login', methods=['GET', 'POST'])
 def login():
     print(request)
     print(request.form)
@@ -24,7 +31,7 @@ def login():
     else:
         abort()
 
-@app.route('/app/data', methods=['POST'])
+@main.route('/app/data', methods=['POST'])
 def handleFile():
     print(request)
     print(request.form)
@@ -35,7 +42,7 @@ def handleFile():
     print(request.content_length)
     return jsonify({'status': 'OK'})
 
-@app.route('/user/<name>')
+@main.route('/user/<name>')
 def user(name):
     return render_template('page.html', user=name)
     # if name == 'baidu':
@@ -45,7 +52,3 @@ def user(name):
     # elif name == 'NO':
     #     return abort(404)
     # return '<h1> Hello, %s <h1>' % name
-
-if __name__ == '__main__':
-    app.debug = True
-    app.run(host='0.0.0.0')
