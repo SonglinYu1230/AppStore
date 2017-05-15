@@ -11,8 +11,10 @@ db = SQLAlchemy()
 def create_app(config_name):
     app = Flask(__name__, static_folder='./static', template_folder='./templates')
     app.config.from_object(config[config_name])
-    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    # db.init_app(app)
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
     # 附加路由和自定义的错误页面
     from .main import main as main_blueprint
