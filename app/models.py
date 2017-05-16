@@ -13,8 +13,8 @@ class User(db.Model):
     email = db.Column(db.String(64), unique=True)
     wechat = db.Column(db.String(64), unique=True)
 
-    def __repr__(self):
-        return '<User %>' % self.name
+    # def __repr__(self):
+    #     return '<User %>' % self.name
 
 class App(db.Model):
     __table__name = 'app'
@@ -28,8 +28,8 @@ class App(db.Model):
     def __repr__(self):
         return '<App %>' % self.id
 
-class AppVersion(db.Model):
-    __table__name = 'app_version'
+class AppVersionInfo(db.Model):
+    __table__name = 'app_version_info'
     build = db.Column(db.String(64), nullable=False, primary_key=True)
     version = db.Column(db.String(64), nullable=False, primary_key=True)
     update_log = db.Column(db.Text)

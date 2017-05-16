@@ -7,29 +7,40 @@ from flask import  request, session, render_template, \
 
 from . import main
 from .. import db
-# from ..models import User
+from ..models import User
 
 @main.route('/')
 def hello_world():
     return '<h1>Hello World</h1>'
-    # return redirect('/login')
-    # return render_template('login.html')
 
 @main.route('/open')
 def open():
     return render_template('open.html')
 
-@main.route('/login', methods=['GET', 'POST'])
+@main.route('/home')
+def home():
+    return render_template('homepage.html')
+
+@main.route('/login')
 def login():
-    print(request)
-    print(request.form)
-    error = None
-    if request.method == 'GET':
-        return render_template('login.html')
-    elif request.method == 'POST':
-        return render_template('homepage.html')
-    else:
-        abort()
+    return render_template('login.html')
+
+@main.route('/session', methods=['POST'])
+def session():
+    loginDict = request.json
+    if loginDict:
+        user = User.query.filter_by(name=loginDict['username'], password=loginDict['password']).first()
+        if user:
+            response = jsonify(
+                isOk=True
+            )
+            response.status_code = 302
+            response.headers['Location'] = url_for('main.home')
+            return response
+    return jsonify(
+        isOk=False,
+        errMsg='user not found'
+    )
 
 @main.route('/app/data', methods=['POST'])
 def handleFile():
