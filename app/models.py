@@ -2,23 +2,28 @@
 # -*- coding: utf-8 -*-
 # Created by why001 on 14/05/2017
 
-from . import db
+from . import db, login_manager
+from flask_login import UserMixin
 
-class User(db.Model):
-    __table__name = 'user'
-    id = db.Column(db.String(64), nullable=False, unique=True, primary_key=True)
+class User(UserMixin, db.Model):
+    __table__name = 'users'
+    id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True)
     name = db.Column(db.String(64), nullable=False, unique=True)
     password = db.Column(db.String(64), nullable=False)
     nick_name = db.Column(db.String(64))
     email = db.Column(db.String(64), unique=True)
     wechat = db.Column(db.String(64), unique=True)
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
     # def __repr__(self):
     #     return '<User %>' % self.name
 
 class App(db.Model):
-    __table__name = 'app'
-    id = db.Column(db.String(64), unique=True, nullable=False, primary_key=True)
+    __table__name = 'apps'
+    id = db.Column(db.Integer, autoincrement=True, nullable=False, primary_key=True)
     name = db.Column(db.String(16), nullable=False)
     desc = db.Column(db.Text)
     app_platform = db.Column(db.String(16), nullable=False)
@@ -41,7 +46,7 @@ class AppVersionInfo(db.Model):
         return '<build %>' % self.build
 
 class Group(db.Model):
-    __table__name = 'group'
+    __table__name = 'groups'
     user_name = db.Column(db.String(64), db.ForeignKey('user.name'), nullable=False, primary_key=True)
     group_id = db.Column(db.String(64), nullable=False, primary_key=True)
 

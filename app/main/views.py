@@ -4,6 +4,7 @@
 
 from flask import  request, session, render_template, \
         url_for, abort, Response, jsonify, redirect
+from flask_login import login_user, logout_user, login_required
 
 from . import main
 from .. import db
@@ -11,26 +12,26 @@ from ..models import User
 
 @main.route('/')
 def hello_world():
-    return '<h1>Hello World</h1>'
-
-@main.route('/open')
-def open():
-    return render_template('open.html')
-
-@main.route('/home')
-def home():
-    return render_template('homepage.html')
+    return redirect('/login')
 
 @main.route('/login')
 def login():
     return render_template('login.html')
 
+@main.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main.login'))
+
 @main.route('/session', methods=['POST'])
-def session():
+def set_session():
     loginDict = request.json
     if loginDict:
         user = User.query.filter_by(name=loginDict['username'], password=loginDict['password']).first()
         if user:
+            login_user(user, True)
+            # session['user_name'] = loginDict['username']
             response = jsonify(
                 isOk=True
             )
@@ -42,8 +43,27 @@ def session():
         errMsg='user not found'
     )
 
-@main.route('/app/data', methods=['POST'])
-def handleFile():
+@main.route('/home')
+@login_required
+def home():
+    # print(session.get('user_name'))
+    return render_template('homepage.html')
+
+@main.route('/apps')
+@login_required
+def apps():
+    return 'Only authenticated users are allowed!'
+    user_name = session['user_name']
+    pass
+
+@main.route('/parseAppInfo', methods=['POST'])
+@login_required
+def parse_App_Info():
+    pass
+
+@main.route('/appUpload', methods=['POST'])
+@login_required
+def app_Upload():
     print(request)
     print(request.form)
     print('request.files')

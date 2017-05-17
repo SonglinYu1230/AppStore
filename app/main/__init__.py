@@ -6,6 +6,8 @@ from flask import Blueprint, request
 from .common import *
 
 main = Blueprint('main', __name__)
+auth = Blueprint('auth', __name__)
+
 # main.before_app_first_request(before_app_first_request)
 main.before_app_request(before_app_request)
 main.before_request(before_request)
