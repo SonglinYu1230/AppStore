@@ -5,21 +5,28 @@ function myFunction() {
     }
 }
 
-function login() {
+function session() {
+    var url = "/session";
+    var user = {
+        'username': 'appupload',
+        'password': '123456'
+    }
     var http = new XMLHttpRequest();
-    var url = "http://0.0.0.0:5000/session";
     http.open("POST", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    // xmlhttp.setRequestHeader("Content-Type", "application/json");
     http.onreadystatechange = function() { //Call a function when the state changes.
-        if (http.readyState == 4 && http.status == 200) {
-            // alert(http.responseText);
-            // if (http.responseText["name"] === "Tom") {
-            // window.location = "http://127.0.0.1:5000/homepage.html"
-        } else if (http.status == 302) {
-            window.location = http.location;
-        }
+        // if (http.readyState == 4 && http.status == 200) {
+        //     // alert(http.responseText);
+        //     // if (http.responseText["name"] === "Tom") {
+        //     // window.location = "http://127.0.0.1:5000/homepage.html"
+        // } else if (http.status == 302) {
+        //     window.location = http.location;
+        // }
+        return false;
     }
-    http.send("fname=Bill&lname=Gates");
+    http.send(JSON.stringify(user));
+
 }
 
 function myChange() {
@@ -54,10 +61,10 @@ function uploadPlist(file) {
         console.log(e)
     };
     xhr.onreadystatechange = function() {
-    if (xhr.readyState == XMLHttpRequest.DONE) {
-        alert(xhr.responseText);
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            alert(xhr.responseText);
+        }
     }
-}
     xhr.send(formData);
 }
 

@@ -2,27 +2,35 @@
 # -*- coding: utf-8 -*-
 # Created by why001 on 14/05/2017
 
-from flask import  request, session, render_template, \
-        url_for, abort, Response, jsonify, redirect
-from flask_login import login_user, logout_user, login_required
+from flask import request, session, render_template, \
+    url_for, abort, Response, jsonify, redirect, g
+from flask_login import login_user, logout_user, login_required, current_user
 
 from . import main
 from .. import db
 from ..models import User
 
-@main.route('/')
-def hello_world():
-    return redirect('/login')
 
-@main.route('/login')
+@main.route('/')
+@login_required
+def index():
+    return redirect('/home')
+
+
+@main.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if current_user.is_authenticated:
+        return redirect('/home')
+    else:
+        return render_template('login.html')
+
 
 @main.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main.login'))
+
 
 @main.route('/session', methods=['POST'])
 def set_session():
@@ -32,22 +40,31 @@ def set_session():
         if user:
             login_user(user, True)
             # session['user_name'] = loginDict['username']
-            response = jsonify(
-                isOk=True
-            )
-            response.status_code = 302
-            response.headers['Location'] = url_for('main.home')
-            return response
+            # response = jsonify(
+            #     isOk=True
+            # )
+            response = {
+                'isOk': True
+            }
+
+            # response.status_code = 302
+            # response.headers['Location'] = url_for('main.home')
+            # headers = {
+            #     'Location': url_for('main.home')
+            # }
+            # return Response(url_for('main.home'), response=response, status=302, headers=headers)
+            return redirect(url_for('main.home'))
     return jsonify(
         isOk=False,
         errMsg='user not found'
     )
 
+
 @main.route('/home')
 @login_required
 def home():
-    # print(session.get('user_name'))
     return render_template('homepage.html')
+
 
 @main.route('/apps')
 @login_required
@@ -56,14 +73,16 @@ def apps():
     user_name = session['user_name']
     pass
 
+
 @main.route('/parseAppInfo', methods=['POST'])
 @login_required
-def parse_App_Info():
+def parse_app_Info():
     pass
+
 
 @main.route('/appUpload', methods=['POST'])
 @login_required
-def app_Upload():
+def app_upload():
     print(request)
     print(request.form)
     print('request.files')
@@ -72,6 +91,7 @@ def app_Upload():
     imfile.save("/Users/Yu/Desktop/1.ipa")
     print(request.content_length)
     return jsonify({'status': 'OK'})
+
 
 @main.route('/user/<name>')
 def user(name):
