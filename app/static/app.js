@@ -8,8 +8,8 @@ function myFunction() {
 function session() {
     var url = "/session";
     var user = {
-        'username': 'appupload',
-        'password': '123456'
+        'username': 'admin',
+        'password': 'admin'
     }
     var http = new XMLHttpRequest();
     http.open("POST", url, true);
@@ -33,7 +33,7 @@ function myChange() {
     oFiles = document.getElementById("file").files;
     f = oFiles[0];
     // f = extractPlist(f);
-    uploadPlist(f);
+    uploadIpa(f);
 }
 
 function extractPlist(file) {
@@ -49,14 +49,14 @@ function extractPlist(file) {
     return file
 }
 
-function uploadPlist(file) {
+function uploadPlist(files) {
     var formData = new FormData();
-    formData.append('username', 'johndoe');
-    formData.append('id', 123456);
-    formData.append('ipa', file);
+    formData.append('fileType', 'plist');
+    formData.append('plist', files[0]);
 
+    var url = '/parseAppInfo'
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://www.163.com/', true);
+    xhr.open('POST', url, true);
     xhr.onload = function(e) {
         console.log(e)
     };
@@ -68,14 +68,17 @@ function uploadPlist(file) {
     xhr.send(formData);
 }
 
-function uploadIpa(file) {
+function uploadIpa(files) {
     var formData = new FormData();
-    formData.append('username', 'johndoe');
-    formData.append('id', 123456);
-    formData.append('ipa', file);
+    formData.append('platformType', 'iOS');
+    formData.append('appID', 'com.app.test');
+    formData.append('versionNumber', 333);
+    formData.append('versionCode', '1.1.1');
+    formData.append('appName', 'TestAPP');
+    formData.append('app', files[0]);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/app/data', true);
+    xhr.open('POST', '/uploadApp', true);
     xhr.onload = function(e) {
 
     };

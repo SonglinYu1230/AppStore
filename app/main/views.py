@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 # Created by why001 on 14/05/2017
 
+import datetime
 from flask import request, session, render_template, \
-    url_for, abort, Response, jsonify, redirect, g
+    url_for, abort, Response, jsonify, redirect, g, json
 from flask_login import login_user, logout_user, login_required, current_user
-
+from .util import IPAPKParser
+from .util import FileManager
 from . import main
 from .. import db
-from ..models import User
+from ..models import User, App, AppVersionInfo
 
 
 @main.route('/')
@@ -39,20 +41,7 @@ def set_session():
         user = User.query.filter_by(name=loginDict['username'], password=loginDict['password']).first()
         if user:
             login_user(user, True)
-            # session['user_name'] = loginDict['username']
-            # response = jsonify(
-            #     isOk=True
-            # )
-            response = {
-                'isOk': True
-            }
-
-            # response.status_code = 302
-            # response.headers['Location'] = url_for('main.home')
-            # headers = {
-            #     'Location': url_for('main.home')
-            # }
-            # return Response(url_for('main.home'), response=response, status=302, headers=headers)
+            session['user_id'] = user.id
             return redirect(url_for('main.home'))
     return jsonify(
         isOk=False,
@@ -77,29 +66,57 @@ def apps():
 @main.route('/parseAppInfo', methods=['POST'])
 @login_required
 def parse_app_Info():
-    pass
+    print('**************************************************************')
+    print(request.files)
+    print(request.form)
+    print(request.data)
+    plist_file = request.files['plist']
+    plist_file.save("/Users/Yu/Desktop/info.plist")
+    with open('/Users/Yu/Desktop/info.plist', 'rb') as f:
+        result = IPAPKParser.plist_info(f.read())
+        result['isOk'] = True
+        return json.dumps(result)
+    return jsonify(
+        isOk=False
+    )
 
 
-@main.route('/appUpload', methods=['POST'])
+    # receive_file.save("/Users/Yu/Desktop/info.plist")
+    # print(request.content_length)
+
+
+@main.route('/uploadApp', methods=['POST'])
 @login_required
 def app_upload():
-    print(request)
-    print(request.form)
-    print('request.files')
-    print(request.files)
-    imfile = request.files['ipa']
-    imfile.save("/Users/Yu/Desktop/1.ipa")
-    print(request.content_length)
+    form = request.form
+    user_id = session.get('user_id')
+    platform_type = form['platformType']
+    app_id = form['appID']
+    version_number = form['versionNumber']
+    print('type of form is ' + str(type(form)))
+    save_result = FileManager.save_user_file(user_id, platform_type,
+                                             app_id, version_number, request.files['app'])
+
+    if save_result:
+        app = App.query.filter_by(id=app_id).first()
+        create_time = datetime.datetime.now()
+        if not app:
+            app = App(id=app_id,
+                      name=form['appName'],
+                      app_platform=platform_type,
+                      owner=int(user_id),
+                      create_time=create_time
+                      )
+            db.session.add(app)
+
+        app_version = AppVersionInfo(build=version_number,
+                                     version=form['versionCode'],
+                                     update_log=form['versionCode'],
+                                     create_time=create_time,
+                                     app_id=app_id
+                                     )
+        db.session.add(app_version)
+        db.session.commit()
+    else:
+        pass
     return jsonify({'status': 'OK'})
-
-
-@main.route('/user/<name>')
-def user(name):
-    return render_template('page.html', user=name)
-    # if name == 'baidu':
-    #     return redirect('https://www.baidu.com')
-    # elif name == 'google':
-    #     return redirect('https://www.google.com/ncr')
-    # elif name == 'NO':
-    #     return abort(404)
-    # return '<h1> Hello, %s <h1>' % name
