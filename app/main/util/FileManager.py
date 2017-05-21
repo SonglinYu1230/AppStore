@@ -6,6 +6,7 @@ import os, glob
 from config import base_dir
 
 app_dir = 'AppFiles'
+temp_dir = 'TempFiles'
 file_type = {
     'iOS': '*.ipa',
     'Android': '*.apk'
@@ -21,9 +22,6 @@ def save_user_file(user_id, platform_type, app_id, version_number, app_file):
         save_path = os.path.join(base_dir, file_dir)
         os.makedirs(save_path, exist_ok=True)
         file_name = app_file.filename
-        print('*' * 20)
-        print(file_name)
-        print('*'*20)
         app_file.save(os.path.join(save_path, file_name))
         return True
     else:
@@ -44,3 +42,15 @@ def file_path(user_id, platform_type, app_id, version_number):
     else:
         return None
 
+
+def save_temp_file(temp_file, session_id):
+    file_dir = app_dir + '/' + temp_dir
+    file_dir += '/' + session_id
+    save_path = os.path.join(base_dir, file_dir)
+    os.makedirs(save_path, exist_ok=True)
+    dest_path = os.path.join(save_path, temp_file.filename)
+    temp_file.save(dest_path)
+    return dest_path
+
+def delete_file(file_path):
+    pass

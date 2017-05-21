@@ -46,11 +46,12 @@ def plist_info(plist_path):
     version_number =   plist_root['CFBundleVersion']
     builder_number =  plist_root['CFBundleShortVersionString']
     app_name = plist_root['CFBundleDisplayName']
-
+    bundle_id = plist_root['CFBundleIdentifier']
     return {
         'version_number': version_number,
         'builder_number': builder_number,
-        'app_name': app_name
+        'app_name': app_name,
+        'bundle_id': bundle_id
     }
 
 

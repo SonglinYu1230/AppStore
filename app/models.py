@@ -15,13 +15,12 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True)
     wechat = db.Column(db.String(64), unique=True)
 
+    def __repr__(self):
+        return 'User ' + self.name
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-    # def __repr__(self):
-    #     return '<User %>' % self.name
 
 
 class App(db.Model):
@@ -34,6 +33,11 @@ class App(db.Model):
     create_time = db.Column(db.DateTime())
     download_count = db.Column(db.Integer)
 
+    def convert_to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    def __repr__(self):
+        return 'App ' + self.name
 
 class AppVersionInfo(db.Model):
     __table__name = 'app_version_info'
@@ -44,6 +48,12 @@ class AppVersionInfo(db.Model):
     create_time = db.Column(db.DateTime())
     app_id = db.Column(db.String(64), db.ForeignKey('app.id'), nullable=False, primary_key=True)
     download_count = db.Column(db.Integer)
+
+    def convert_to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    def __repr__(self):
+        return 'AppVersionInfo ' + self.app_id + self.version + self.build
 
 
 class Group(db.Model):

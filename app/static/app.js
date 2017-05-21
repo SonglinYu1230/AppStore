@@ -51,20 +51,15 @@ function extractPlist(file) {
 
 function uploadPlist(files) {
     var formData = new FormData();
-    formData.append('fileType', 'plist');
+    formData.append('platformType', 'iOS');
     formData.append('plist', files[0]);
 
     var url = '/parseAppInfo'
     var xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function(e) {
-        console.log(e)
+        alert(e)
     };
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            alert(xhr.responseText);
-        }
-    }
     xhr.send(formData);
 }
 
@@ -80,7 +75,7 @@ function uploadIpa(files) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/uploadApp', true);
     xhr.onload = function(e) {
-
+        alert(e)
     };
     xhr.send(formData);
 }

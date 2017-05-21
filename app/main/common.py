@@ -13,6 +13,12 @@ def before_app_first_request():
     print(who_am_i())
 
 def before_app_request():
+    print('*'*66)
+    print(request)
+    print(request.form)
+    print(request.data)
+    print(request.files)
+    print('*' * 66)
     print(who_am_i())
 
 def before_request():

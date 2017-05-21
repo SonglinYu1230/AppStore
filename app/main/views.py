@@ -58,31 +58,32 @@ def home():
 @main.route('/apps')
 @login_required
 def apps():
-    return 'Only authenticated users are allowed!'
-    user_name = session['user_name']
-    pass
+    user_id = session.get('user_id')
+    apps = App.query.filter_by(owner=user_id).all()
+    appList = []
+    for app in apps:
+        appList.append(app.convert_to_dict())
 
+    response = {
+        'isOk': True,
+        'apps': appList
+    }
+    return jsonify(response)
 
 @main.route('/parseAppInfo', methods=['POST'])
 @login_required
 def parse_app_Info():
-    print('**************************************************************')
-    print(request.files)
-    print(request.form)
-    print(request.data)
-    plist_file = request.files['plist']
-    plist_file.save("/Users/Yu/Desktop/info.plist")
-    with open('/Users/Yu/Desktop/info.plist', 'rb') as f:
-        result = IPAPKParser.plist_info(f.read())
-        result['isOk'] = True
-        return json.dumps(result)
-    return jsonify(
-        isOk=False
-    )
-
-
-    # receive_file.save("/Users/Yu/Desktop/info.plist")
-    # print(request.content_length)
+    platform_type = request.form['platformType']
+    response = None
+    if platform_type == 'iOS':
+        response = parse_plist_info(request.files['plist'])
+    elif platform_type == 'Android':
+        parse_xml_info(request.files['xml'])
+        parse_arsc_info(request.files['arsc'])
+    else:
+        return 'Error'
+    response['isOk'] = True
+    return jsonify(response)
 
 
 @main.route('/uploadApp', methods=['POST'])
@@ -93,7 +94,6 @@ def app_upload():
     platform_type = form['platformType']
     app_id = form['appID']
     version_number = form['versionNumber']
-    print('type of form is ' + str(type(form)))
     save_result = FileManager.save_user_file(user_id, platform_type,
                                              app_id, version_number, request.files['app'])
 
@@ -108,15 +108,34 @@ def app_upload():
                       create_time=create_time
                       )
             db.session.add(app)
-
-        app_version = AppVersionInfo(build=version_number,
-                                     version=form['versionCode'],
-                                     update_log=form['versionCode'],
-                                     create_time=create_time,
-                                     app_id=app_id
-                                     )
-        db.session.add(app_version)
+        app_version = AppVersionInfo.query.filter_by(build=version_number, version=form['versionCode'], app_id=app_id).first()
+        if not app_version:
+            app_version = AppVersionInfo(build=version_number,
+                                         version=form['versionCode'],
+                                         update_log=form['updateLog'],
+                                         create_time=create_time,
+                                         app_id=app_id
+                                         )
+            db.session.add(app_version)
+        else:
+            app_version.update_log = 'Testtttttt'
+            app_version.create_time = create_time
+            db.session.merge(app_version)
         db.session.commit()
     else:
         pass
+
     return jsonify({'status': 'OK'})
+
+
+def parse_plist_info(plist_file):
+    temp_path = FileManager.save_temp_file(plist_file, session.get('_id'))
+    print(temp_path)
+    with open(temp_path, 'rb') as f:
+        return IPAPKParser.plist_info(f.read())
+
+def parse_xml_info():
+    pass
+
+def parse_arsc_info():
+    pass
