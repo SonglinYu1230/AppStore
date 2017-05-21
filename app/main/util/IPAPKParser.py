@@ -62,12 +62,31 @@ def convert_xml(binary_xml_path, text_xml_path):
     fd = open(text_xml_path, "w")
     fd.write( buff )
     fd.close()
-    pass
 
 
 def parse_xml(xml_path):
     tree = ET.ElementTree(file=xml_path)
     root = tree.getroot()
-    print(root.attrib["{http://schemas.android.com/apk/res/android}versionCode"])
-    print(root.attrib["{http://schemas.android.com/apk/res/android}versionName"])
-    print(root.attrib['package'])
+    version_code = root.attrib["{http://schemas.android.com/apk/res/android}versionCode"]
+    version_name = root.attrib["{http://schemas.android.com/apk/res/android}versionName"]
+    package = root.attrib['package']
+    app_node = (root.findall('application'))[0]
+    app_name = app_node.attrib["{http://schemas.android.com/apk/res/android}name"]
+
+    return {
+        'version_number': version_name,
+        'builder_number': version_code,
+        'app_name': app_name,
+        'bundle_id': package
+    }
+
+
+def parse_binary_xml_path(xml_path):
+    ap = apk.AXMLPrinter(open(xml_path, "rb").read())
+    buff = ap.get_xml_obj().toprettyxml()
+
+    fd = open(xml_path, "w")
+    fd.write(buff)
+    fd.close()
+
+    return parse_xml(xml_path)

@@ -63,6 +63,21 @@ function uploadPlist(files) {
     xhr.send(formData);
 }
 
+function uploadAndroidFiles(files) {
+    var formData = new FormData();
+    formData.append('platformType', 'Android');
+    formData.append('xml', files[0]);
+
+    var url = '/parseAppInfo'
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.onload = function(e) {
+        alert(e)
+    };
+    xhr.send(formData);
+}
+
+
 function uploadIpa(files) {
     var formData = new FormData();
     formData.append('platformType', 'iOS');

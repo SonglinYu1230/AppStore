@@ -3,6 +3,7 @@
 # Created by why001 on 14/05/2017
 
 import datetime
+import os
 from flask import request, session, render_template, \
     url_for, abort, Response, jsonify, redirect, g, json
 from flask_login import login_user, logout_user, login_required, current_user
@@ -74,12 +75,12 @@ def apps():
 @login_required
 def parse_app_Info():
     platform_type = request.form['platformType']
-    response = None
+    response = {}
     if platform_type == 'iOS':
-        response = parse_plist_info(request.files['plist'])
+        response.update(parse_plist_info(request.files['plist']))
     elif platform_type == 'Android':
-        parse_xml_info(request.files['xml'])
-        parse_arsc_info(request.files['arsc'])
+        response.update(parse_xml_info(request.files['xml']))
+        # parse_arsc_info(request.files['arsc'])
     else:
         return 'Error'
     response['isOk'] = True
@@ -130,12 +131,17 @@ def app_upload():
 
 def parse_plist_info(plist_file):
     temp_path = FileManager.save_temp_file(plist_file, session.get('_id'))
-    print(temp_path)
     with open(temp_path, 'rb') as f:
-        return IPAPKParser.plist_info(f.read())
+        parse_result = IPAPKParser.plist_info(f.read())
+        os.remove(temp_path)
+        return parse_result
 
-def parse_xml_info():
-    pass
+def parse_xml_info(binary_xml_file):
+    temp_binary_xml_path = FileManager.save_temp_file(binary_xml_file, session.get('_id'))
+    parse_result = IPAPKParser.parse_binary_xml_path(temp_binary_xml_path)
+    os.remove(temp_binary_xml_path)
+    return parse_result
+
 
 def parse_arsc_info():
     pass
