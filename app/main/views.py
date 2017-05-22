@@ -20,37 +20,36 @@ def index():
     return redirect('/home')
 
 
-@main.route('/login') #, methods=['GET', 'POST']
+@main.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect('/home')
     else:
-        return render_template('login.html')
+        if request.method == 'GET':
+            return render_template('login.html')
+        elif request.method == 'POST':
+            user_info = request.form
+            user_name = user_info['username']
+            password = user_info['password']
+            if user_name and password:
+                user = User.query.filter_by(name=user_name, password=password).first()
+                if user:
+                    login_user(user, True)
+                    session['user_id'] = user.id
+                    return redirect(url_for('main.home'))
+            return jsonify(
+                isOk=False,
+                errMsg='user not found'
+            )
+        else:
+            return abort(400)
 
 
-@main.route('/logout')
+@main.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main.login'))
-
-
-@main.route('/session', methods=['POST'])
-def set_session():
-    user_info = request.json
-    user_name = user_info['username']
-    password = user_info['password']
-    if user_name and password:
-        user = User.query.filter_by(name=user_name, password=password).first()
-        if user:
-            login_user(user, True)
-            session['user_id'] = user.id
-            return redirect(url_for('main.home'))
-    return jsonify(
-        isOk=False,
-        errMsg='user not found'
-    )
-
 
 @main.route('/home')
 @login_required

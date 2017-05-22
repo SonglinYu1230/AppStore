@@ -5,15 +5,24 @@ function myFunction() {
     }
 }
 
-function session() {
-    var url = "/session";
+function login() {
+    var url = "/login";
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
     var userInfo = {
-        'username': user,
+        'username': username,
         'password': password
     };
-    sendPostRequest(url, ContentTypeJSON, userInfo, null, function(xhr) {});
+    // sendPostRequest(url, ContentTypeJSON, userInfo, function(xhr) {
+
+    // }, function(xhr) {});
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: userInfo,
+        success: function(data) { alert('data: ' + data); },
+    });
 }
 
 function myChange() {
