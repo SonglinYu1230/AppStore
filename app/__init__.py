@@ -15,7 +15,7 @@ login_manager.login_view = 'main.login'
 
 
 def create_app(config_name):
-    app = Flask(__name__, static_folder='./static', template_folder='./templates')
+    app = Flask(__name__)
     app.config.from_object(config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     login_manager.init_app(app)
@@ -26,7 +26,9 @@ def create_app(config_name):
     # 附加路由和自定义的错误页面
     from .main import main as main_blueprint
     from .main import auth as auth_blueprint
+    from .main import app_file as app_file_blue_print
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint)
+    app.register_blueprint(app_file_blue_print)
 
     return app

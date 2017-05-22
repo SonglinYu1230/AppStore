@@ -1,5 +1,5 @@
 function myFunction() {
-    var username = document.getElementById("username").value
+    var username = document.getElementById("username").value;
     if (username.length < 6) {
         alert(document.getElementById("username").placeholder);
     }
@@ -7,26 +7,13 @@ function myFunction() {
 
 function session() {
     var url = "/session";
-    var user = {
-        'username': 'admin',
-        'password': 'admin'
-    }
-    var http = new XMLHttpRequest();
-    http.open("POST", url, true);
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    // xmlhttp.setRequestHeader("Content-Type", "application/json");
-    http.onreadystatechange = function() { //Call a function when the state changes.
-        // if (http.readyState == 4 && http.status == 200) {
-        //     // alert(http.responseText);
-        //     // if (http.responseText["name"] === "Tom") {
-        //     // window.location = "http://127.0.0.1:5000/homepage.html"
-        // } else if (http.status == 302) {
-        //     window.location = http.location;
-        // }
-        return false;
-    }
-    http.send(JSON.stringify(user));
-
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    var userInfo = {
+        'username': user,
+        'password': password
+    };
+    sendPostRequest(url, ContentTypeJSON, userInfo, null, function(xhr) {});
 }
 
 function myChange() {
@@ -46,7 +33,7 @@ function extractPlist(file) {
             // see FileSaver.js
             saveAs(content, "example.zip");
         });
-    return file
+    return file;
 }
 
 function uploadPlist(files) {
@@ -54,11 +41,11 @@ function uploadPlist(files) {
     formData.append('platformType', 'iOS');
     formData.append('plist', files[0]);
 
-    var url = '/parseAppInfo'
+    var url = '/parseAppInfo';
     var xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function(e) {
-        alert(e)
+        alert(e);
     };
     xhr.send(formData);
 }
@@ -68,11 +55,11 @@ function uploadAndroidFiles(files) {
     formData.append('platformType', 'Android');
     formData.append('xml', files[0]);
 
-    var url = '/parseAppInfo'
+    var url = '/parseAppInfo';
     var xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function(e) {
-        alert(e)
+        alert(e);
     };
     xhr.send(formData);
 }
@@ -90,7 +77,7 @@ function uploadIpa(files) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/uploadApp', true);
     xhr.onload = function(e) {
-        alert(e)
+        alert(e);
     };
     xhr.send(formData);
 }

@@ -9,7 +9,7 @@ from flask import request, session, render_template, \
 from flask_login import login_user, logout_user, login_required, current_user
 from .util import IPAPKParser
 from .util import FileManager
-from . import main
+from . import main, app_file
 from .. import db
 from ..models import User, App, AppVersionInfo
 
@@ -20,7 +20,7 @@ def index():
     return redirect('/home')
 
 
-@main.route('/login', methods=['GET', 'POST'])
+@main.route('/login') #, methods=['GET', 'POST']
 def login():
     if current_user.is_authenticated:
         return redirect('/home')
@@ -37,9 +37,11 @@ def logout():
 
 @main.route('/session', methods=['POST'])
 def set_session():
-    loginDict = request.json
-    if loginDict:
-        user = User.query.filter_by(name=loginDict['username'], password=loginDict['password']).first()
+    user_info = request.json
+    user_name = user_info['username']
+    password = user_info['password']
+    if user_name and password:
+        user = User.query.filter_by(name=user_name, password=password).first()
         if user:
             login_user(user, True)
             session['user_id'] = user.id
@@ -129,12 +131,22 @@ def app_upload():
     return jsonify({'status': 'OK'})
 
 
+
+@app_file.route('/test')
+def static_file_parser():
+    print('this is it')
+    return jsonify(
+        isOk=True
+    )
+
+
 def parse_plist_info(plist_file):
     temp_path = FileManager.save_temp_file(plist_file, session.get('_id'))
     with open(temp_path, 'rb') as f:
         parse_result = IPAPKParser.plist_info(f.read())
         os.remove(temp_path)
         return parse_result
+
 
 def parse_xml_info(binary_xml_file):
     temp_binary_xml_path = FileManager.save_temp_file(binary_xml_file, session.get('_id'))
