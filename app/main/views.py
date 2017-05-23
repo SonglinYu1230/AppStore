@@ -80,8 +80,7 @@ def parse_app_Info():
     if platform_type == 'iOS':
         response.update(parse_plist_info(request.files['plist']))
     elif platform_type == 'Android':
-        response.update(parse_xml_info(request.files['xml']))
-        # parse_arsc_info(request.files['arsc'])
+        response.update(parse_miniAPK(request.files['miniAPK'], request.form['fileName']))
     else:
         return 'Error'
     response['isOk'] = True
@@ -146,6 +145,11 @@ def parse_plist_info(plist_file):
         os.remove(temp_path)
         return parse_result
 
+def parse_miniAPK(miniAPK, file_name):
+    temp_path = FileManager.save_blob_file(miniAPK, file_name, session.get('_id'))
+    parse_result = IPAPKParser.parse_miniapk_with_path(temp_path)
+    os.remove(temp_path)
+    return parse_result
 
 def parse_xml_info(binary_xml_file):
     temp_binary_xml_path = FileManager.save_temp_file(binary_xml_file, session.get('_id'))

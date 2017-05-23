@@ -52,6 +52,16 @@ def save_temp_file(temp_file, session_id):
     temp_file.save(dest_path)
     return dest_path
 
+def save_blob_file(temp_file, file_name, session_id):
+    file_dir = app_dir + '/' + temp_dir
+    file_dir += '/' + session_id
+    save_path = os.path.join(base_dir, file_dir)
+    os.makedirs(save_path, exist_ok=True)
+    dest_path = os.path.join(save_path, file_name)
+    temp_file.save(dest_path)
+    return dest_path
+    pass
+
 def delete_file(file_path):
 
     pass
