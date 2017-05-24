@@ -5,7 +5,7 @@ function myFunction() {
     }
 }
 
-function login() {
+function signin() {
     var url = "/login";
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
@@ -13,7 +13,7 @@ function login() {
         'username': username,
         'password': password
     };
-    // sendPostRequest(url, ContentTypeJSON, userInfo, function(xhr) {
+    // sendPostRequest(url, null, userInfo, function(xhr) {
 
     // }, function(xhr) {});
 
@@ -21,7 +21,11 @@ function login() {
         type: 'POST',
         url: url,
         data: userInfo,
-        success: function(data) { alert('data: ' + data); },
+        success: function(data, status, request) {
+            if (data['isOk']) {
+                window.location.href = '/home';
+            }
+        },
     });
 }
 

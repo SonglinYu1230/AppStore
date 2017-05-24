@@ -2,16 +2,17 @@
 <html>
 
 <head>
-    <title>login</title>
+    <title>登录</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
     <link href="/static/css/login.css" rel="stylesheet">
     <script type="text/javascript" src="/static/js/util/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="/static/js/util/request.js"></script>
     <script type="text/javascript" src="/static/js/app.js"></script>
 </head>
 
-<body>
+<!--<body>
     <form id="loginform" method="post">
         <input id="username" type="text" name="username" placeholder="please input your username" />
         <br />
@@ -19,6 +20,26 @@
         <br />
         <input class="submit" type="submit" onclick="login()" value="登录" />
     </form>
+</body>-->
+
+<body>
+    <div class="container">
+
+        <form class="form-signin">
+            <h2 class="form-signin-heading">请登录</h2>
+            <label for="inputEmail" class="sr-only">Email Address</label>
+            <input id="username" class="form-control" placeholder="username" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Password" required>
+            <div class="checkbox">
+                <label>
+                <input type="checkbox" value="remember-me">Remember me
+                </label>
+            </div>
+            <button id="login" class="btn btn-lg btn-primary btn-block" onclick="signin();return false;">登录</button>
+        </form>
+
+    </div>
 </body>
 
 </html>

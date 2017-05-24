@@ -14,6 +14,11 @@ from .. import db
 from ..models import User, App, AppVersionInfo
 
 
+@main.route('/favicon.ico')
+def favicon():
+    return url_for('static', filename='favicon.ico')
+
+
 @main.route('/')
 @login_required
 def index():
@@ -36,7 +41,11 @@ def login():
                 if user:
                     login_user(user, True)
                     session['user_id'] = user.id
-                    return redirect(url_for('main.home'))
+                    # return redirect(url_for('main.home'))
+
+                    return jsonify(
+                        isOk=True
+                    )
             return jsonify(
                 isOk=False,
                 errMsg='user not found'
