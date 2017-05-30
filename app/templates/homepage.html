@@ -3,57 +3,96 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">.
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/static/css/homepage.css" />
     <script type="text/javascript" src="/static/js/util/jszip.js"></script>
     <script type="text/javascript" src="/static/js/util/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/util/bootstrap.js"></script>
     <script type="text/javascript" src="/static/js/app.js"></script>
     <title>主页</title>
 </head>
 
 <body>
+    <!--Navigation Bar-->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+                <a class="navbar-brand" href="#">: )</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <!--<li class="active"><a href="#">: )</a></li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span>个人信息</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span>退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <div class="container">
-        <div class="common">
-            <div class="product" id="upload">
-                <input type="file" name="file" id="file" class="inputfile" onchange="uploadIpa(this.files)">
-                <label for="file">上传文件</label>
-                </input>
+    <!--Middle Container-->
+    <div id="middle-container">
+
+        <div id='upload-box' class="rectangle-container">
+            <div class="rectangle">
+            </div>
+            <div class="inner-rectangle">
+                <p class="test">testttttttt</p>
+                <p class="test">r43434343243</p>
+                <p class="test">testttttttt</p>
             </div>
         </div>
 
-        <div class="common">
-            <div class="product" id="uploadAndroidFiles">
-                <input type="file" name="file" id="file2" class="inputfile" onchange="handleFile(this.files)">
-                <label for="file2">解压APK上传xml arsc</label>
-                </input>
-            </div>
-        </div>
-
-        <div class="common">
-            <div class="product">
+        <div class="rectangle-container">
+            <div class="rectangle">
 
             </div>
         </div>
 
-        <div class="common">
-            <div class="product">
+        <div class="rectangle-container">
+            <div class="rectangle">
 
             </div>
         </div>
 
-        <div class="common">
-            <div class="product">
-
+        <!--<div class="rectangle-container">
+            <div class="rectangle btn btn-primary">
+                <div>: )</div>
+                <input type="file" class="upload" />
+            </div>
+        </div>-->
+        <!--<div class="rectangle-container">
+            <div class="rectangle btn btn-primary">
+                <div>: )</div>
+                <input type="file" class="upload" />
             </div>
         </div>
 
-        <div class="common">
-            <div class="product">
-
+        <div class="rectangle-container">
+            <div class="rectangle btn btn-primary">
+                <div>: )</div>
+                <input type="file" class="upload" />
             </div>
-        </div>
+        </div>-->
+
     </div>
 
+
 </body>
+
+<script>
+    loadApps();
+    window.onload = function() {
+        window.status = "Page is loaded";
+        console.log('on load');
+    }
+</script>
 
 </html>

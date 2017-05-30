@@ -61,12 +61,12 @@ def logout():
     return redirect(url_for('main.login'))
 
 @main.route('/home')
-@login_required
+# @login_required
 def home():
     return render_template('homepage.html')
 
 
-@main.route('/apps')
+@main.route('/apps', methods=['GET', 'POST'])
 @login_required
 def apps():
     user_id = session.get('user_id')

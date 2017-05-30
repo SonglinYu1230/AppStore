@@ -5,6 +5,10 @@ function myFunction() {
     }
 }
 
+function showAlert() {
+    alert('test');
+}
+
 function signin() {
     var url = "/login";
     var username = document.getElementById('username').value;
@@ -27,6 +31,41 @@ function signin() {
             }
         },
     });
+}
+
+function loadApps() {
+    var url = "/apps";
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: null,
+        success: function(data, status, request) {
+            // alert(data);
+            if (data['isOk']) {
+                insertApps(data['apps']);
+            }
+        },
+    });
+}
+
+function testDOM(i) {
+    console.log(i);
+    var container = document.getElementsByClassName('container');
+    console.log(container);
+}
+
+function insertApps(apps) {
+    console.log(apps);
+
+    // var app = document.createElement("div");
+    // app.setAttribute("class", "file-upload-container");
+
+    // var element = document.getElementById("middle-container");
+    // element.appendChild(app);
+
+    // var innerApp = document.createElement("div");
+    // innerApp.setAttribute("class", "fileUpload btn btn-primary");
+    // app.appendChild(innerApp);
 }
 
 function myChange() {

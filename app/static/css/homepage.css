@@ -1,6 +1,82 @@
 body {
+    margin-top: -20px;
+    background-color: #299;
+}
+
+#middle-container {
+    position: relative;
+    background-color: mediumorchid;
+    border: 5px solid lightblue;
+    left: 5%;
+    width: 90%;
+    margin: 0px;
+    /*display: flex;*/
+    overflow: hidden;
+}
+
+.rectangle-container {
+    width: 33.33%;
+    float: left;
+    background-color: lightcoral;
+    border: 3px solid black;
+    /*display: flex;*/
+    /*flex-direction: row-reverse;*/
+}
+
+.rectangle {
+    background-color: darkturquoise;
+    position: relative;
+    width: 90%;
+    height: 90%;
+    left: 5%;
+    padding-top: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding: auto 20px;
+}
+
+.inner-rectangle {
+    position: relative;
+    width: 100%;
+    /*padding-top: -100%;*/
+    background-color: purple;
+    border: 5px solid lightslategray;
+}
+
+.test {
+    background-color: red;
+    text-align: center;
+    vertical-align: middle;
+    /*line-height: 100px;*/
+}
+
+.rectangle input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.upload {
+    position: absolute;
+}
+
+.box {
+    background-color: #dfc8ca;
+    padding: 6.25rem 1.25rem;
+}
+
+
+/*body {
     background-color: #DEDEDE;
 }
+
+
 
 .container {
     position: relative;
@@ -10,7 +86,6 @@ body {
 }
 
 .common {
-    /*background-color: lightcoral;*/
     width: 33.3333333333%;
     height: 480px;
     float: left;
@@ -23,7 +98,6 @@ body {
     left: 5%;
     width: 90%;
     height: 90%;
-    /*opacity: 0;*/
 }
 
 #upload:hover {
@@ -52,14 +126,8 @@ body {
     background-color: darkgoldenrod;
 }
 
-
-/*upload:focus {
-    background-color: darkgoldenrod;
-}*/
-
 .inputfile+label {
     cursor: pointer;
-    /* "hand" cursor */
 }
 
 .inputfile:focus+label {
@@ -83,4 +151,4 @@ label {
     width: 90%;
     height: 90%;
     float: left;
-}
+}*/
