@@ -16,7 +16,7 @@ from ..models import User, App, AppVersionInfo
 
 @main.route('/favicon.ico')
 def favicon():
-    return url_for('static', filename='favicon.ico')
+    return url_for('static', filename='images/favicon.ico')
 
 
 @main.route('/')
@@ -69,6 +69,9 @@ def home():
 @main.route('/apps', methods=['GET', 'POST'])
 @login_required
 def apps():
+    if (request.method == 'GET'):
+        return render_template('apps.html')
+
     user_id = session.get('user_id')
     apps = App.query.filter_by(owner=user_id).all()
     appList = []
@@ -148,7 +151,8 @@ def static_file_parser():
 
 
 def parse_plist_info(plist_file):
-    temp_path = FileManager.save_temp_file(plist_file, session.get('_id'))
+    temp_path = FileManager.save_blob_file(plist_file, 'blob', session.get('_id'))
+
     with open(temp_path, 'rb') as f:
         parse_result = IPAPKParser.plist_info(f.read())
         os.remove(temp_path)

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Created by why001 on 20/05/2017
 
-import os, glob
+import os, glob, zipfile
 from config import base_dir
 
 app_dir = 'AppFiles'
@@ -52,7 +52,7 @@ def save_temp_file(temp_file, session_id):
     temp_file.save(dest_path)
     return dest_path
 
-def save_blob_file(temp_file, file_name, session_id):
+def save_temp_file_with_name(temp_file, file_name, session_id):
     file_dir = app_dir + '/' + temp_dir
     file_dir += '/' + session_id
     save_path = os.path.join(base_dir, file_dir)
@@ -60,8 +60,23 @@ def save_blob_file(temp_file, file_name, session_id):
     dest_path = os.path.join(save_path, file_name)
     temp_file.save(dest_path)
     return dest_path
+
+def save_blob_file(temp_file, file_name, session_id):
+    file_dir = app_dir + '/' + temp_dir
+    file_dir += '/' + session_id
+    save_path = os.path.join(base_dir, file_dir)
+    os.makedirs(save_path, exist_ok=True)
+    blob_path = os.path.join(save_path, file_name)
+    temp_file.save(blob_path)
+
+    zip_ref = zipfile.ZipFile(blob_path, 'r')
+    zip_ref.extractall(save_path)
+    zip_ref.close()
+
+    os.remove(blob_path)
+
+    return os.path.join(save_path, 'Info.plist')
     pass
 
 def delete_file(file_path):
-
     pass

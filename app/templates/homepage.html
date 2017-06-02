@@ -3,12 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">.
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">.-->
     <link href="/static/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/static/css/homepage.css" />
     <script type="text/javascript" src="/static/js/util/jszip.js"></script>
     <script type="text/javascript" src="/static/js/util/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="/static/js/util/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/js/util/bootbox.min.js"></script>
+    <script type="text/javascript" src="/static/js/util/request.js"></script>
     <script type="text/javascript" src="/static/js/app.js"></script>
     <title>主页</title>
 </head>
@@ -40,50 +42,25 @@
     <!--Middle Container-->
     <div id="middle-container">
 
-        <div id='upload-box' class="rectangle-container">
+        <div id="upload-rectangle" class="rectangle-container">
             <div class="rectangle">
-            </div>
-            <div class="inner-rectangle">
-                <p class="test">testttttttt</p>
-                <p class="test">r43434343243</p>
-                <p class="test">testttttttt</p>
-            </div>
-        </div>
-
-        <div class="rectangle-container">
-            <div class="rectangle">
-
-            </div>
-        </div>
-
-        <div class="rectangle-container">
-            <div class="rectangle">
-
+                <input type="file" accept=".apk, .ipa" onchange="handleFiles(this.files)">
             </div>
         </div>
 
         <!--<div class="rectangle-container">
-            <div class="rectangle btn btn-primary">
-                <div>: )</div>
-                <input type="file" class="upload" />
-            </div>
-        </div>-->
-        <!--<div class="rectangle-container">
-            <div class="rectangle btn btn-primary">
-                <div>: )</div>
-                <input type="file" class="upload" />
-            </div>
-        </div>
-
-        <div class="rectangle-container">
-            <div class="rectangle btn btn-primary">
-                <div>: )</div>
-                <input type="file" class="upload" />
+            <div class="rectangle">
+                <p>app name</p>
+                <p>app download address</p>
+                <p>version and build</p>
+                <p>pageage type</p>
+                <button type="">edit</button>
+                <button type="">preview</button>
+                <button type="">delete</button>
             </div>
         </div>-->
 
     </div>
-
 
 </body>
 

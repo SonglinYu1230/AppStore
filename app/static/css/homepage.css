@@ -1,154 +1,38 @@
-body {
-    margin-top: -20px;
-    background-color: #299;
-}
-
 #middle-container {
     position: relative;
-    background-color: mediumorchid;
-    border: 5px solid lightblue;
+    /*background-color: mediumorchid;*/
+    border: 1px solid lightblue;
     left: 5%;
     width: 90%;
-    margin: 0px;
-    /*display: flex;*/
     overflow: hidden;
 }
 
 .rectangle-container {
     width: 33.33%;
+    height: auto;
     float: left;
-    background-color: lightcoral;
-    border: 3px solid black;
-    /*display: flex;*/
-    /*flex-direction: row-reverse;*/
+    /*background-color: lightcoral;*/
+    border: 1px solid black;
+    text-align: center;
 }
 
 .rectangle {
     background-color: darkturquoise;
-    position: relative;
-    width: 90%;
-    height: 90%;
-    left: 5%;
-    padding-top: 100%;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding: auto 20px;
-}
-
-.inner-rectangle {
-    position: relative;
-    width: 100%;
-    /*padding-top: -100%;*/
-    background-color: purple;
-    border: 5px solid lightslategray;
-}
-
-.test {
-    background-color: red;
-    text-align: center;
-    vertical-align: middle;
-    /*line-height: 100px;*/
-}
-
-.rectangle input.upload {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-}
-
-.upload {
-    position: absolute;
-}
-
-.box {
-    background-color: #dfc8ca;
-    padding: 6.25rem 1.25rem;
-}
-
-
-/*body {
-    background-color: #DEDEDE;
-}
-
-
-
-.container {
-    position: relative;
-    top: 5%;
-    left: 5%;
-    width: 90%;
-}
-
-.common {
-    width: 33.3333333333%;
-    height: 480px;
-    float: left;
-}
-
-#upload {
-    background-color: #F8BA0B;
-    position: relative;
-    top: 5%;
-    left: 5%;
-    width: 90%;
-    height: 90%;
-}
-
-#upload:hover {
-    background-color: darkgoldenrod;
-}
-
-.inputfile {
-    background-color: red;
-    position: relative;
-    top: 5%;
-    left: 5%;
-    width: 90%;
-    height: 90%;
-    opacity: 0;
-}
-
-.inputfile+label {
-    font-size: 1.25em;
-    font-weight: 700;
-    color: white;
-    display: inline-block;
-}
-
-.inputfile:focus+label,
-.inputfile+label:hover {
-    background-color: darkgoldenrod;
-}
-
-.inputfile+label {
-    cursor: pointer;
-}
-
-.inputfile:focus+label {
-    outline: 1px dotted #000;
-    outline: -webkit-focus-ring-color auto 5px;
-}
-
-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.product {
-    background-color: cyan;
+    width: 240px;
+    height: 320px;
     margin: auto;
-    position: relative;
-    top: 5%;
-    left: 5%;
-    width: 90%;
-    height: 90%;
-    float: left;
-}*/
+}
+
+.app-name {}
+
+.download-page {}
+
+.version-info {}
+
+.package-info {}
+
+.button-edit {}
+
+.button-preview {}
+
+.button-delete {}

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>app下载</title>
+    <!--H5页面窗口自动调整到设备宽度，并禁止用户缩放页面-->
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <!--将网站添加到主屏幕快速启动方式，仅针对ios的safari顶端状态条的样式  -->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--忽略将页面中的数字识别为电话号码-->
+    <meta content="telephone=no" name="format-detection">
+    <!--忽略Android平台中对邮箱地址的识别 -->
+    <meta name="format-detection" content="email=no" />
+    <!--winphone系统a、input标签被点击时产生的半透明灰色背景怎么去掉-->
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" href="/static/css/apps.css">
+
+    <script>
+        function size() {
+            var Wwidth = $(window).width();
+            if (Wwidth > 640) {
+                Wwidth = 640
+            }
+            var bs = (Wwidth / 320) * 10;
+            var bspx = bs + "px";
+            $("html").css("font-size", bs);
+        }
+        $(function() {
+            size();
+        })
+        $(window).resize(function() {
+            size();
+        });
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <h2>AppStore</h2><br>
+            <a class="attention" href="/cer/myCA.cer">如果出现【无法验证服务器身份】或【无法链接到】，请点击链接安装证书</a>
+            <p>在 iOS 10.3 及更高版本系统中，手动安装上面的证书以，必须手动开启受 SSL 信任。<br>开启步骤如下：</p>
+            <span>设置 > 通用 > 关于本机 > 证书信任设置 > 在“针对根证书启用完全信任”下，开启信任这个证书。</span>
+        </header>
+        <div class="app_wrapper">
+            <ul class="platform_wrapper"><span><span class="platform_title selected_title">iOS</span><span class="platform_title">Android</span></span>
+            </ul>
+            <div class="moreAppButton"><span>加载更多</span></div>
+        </div>
+
+        <p class="support">网站由<a href="https://github.com/yumumu/AppStore">AppStore</a>项目支持</p>
+    </div>
+</body>
+
+</html>

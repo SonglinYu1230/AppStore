@@ -1,13 +1,4 @@
-function myFunction() {
-    var username = document.getElementById("username").value;
-    if (username.length < 6) {
-        alert(document.getElementById("username").placeholder);
-    }
-}
-
-function showAlert() {
-    alert('test');
-}
+var loadingView;
 
 function signin() {
     var url = "/login";
@@ -48,58 +39,76 @@ function loadApps() {
     });
 }
 
-function testDOM(i) {
-    console.log(i);
-    var container = document.getElementsByClassName('container');
-    console.log(container);
-}
-
 function insertApps(apps) {
-    console.log(apps);
+    Array.prototype.push.apply(apps, apps);
+    Array.prototype.push.apply(apps, apps);
 
-    // var app = document.createElement("div");
-    // app.setAttribute("class", "file-upload-container");
+    var relativeDiv = document.getElementById("middle-container");
+    for (var i = 0; i < apps.length; i++) {
+        var rc = document.createElement("div");
+        rc.setAttribute("class", "rectangle-container");
 
-    // var element = document.getElementById("middle-container");
-    // element.appendChild(app);
+        var rcc = document.createElement("div");
+        rcc.setAttribute("class", "rectangle");
+        rc.appendChild(rcc);
 
-    // var innerApp = document.createElement("div");
-    // innerApp.setAttribute("class", "fileUpload btn btn-primary");
-    // app.appendChild(innerApp);
+        // var pType = ['app-name', 'download-page', 'version-info', 'package-info'];
+
+        var textPrefix = ['应用名称:', 'BundleID:', '最新版本:', '平台类型:', '下载次数:'];
+        var keys = ['name', 'id', 'version', 'app_platform', 'download_count'];
+        var app = apps[i];
+        for (var j = 0; j < textPrefix.length; j++) {
+            var para = document.createElement('P');
+            // para.setAttribute("class", pType[j]);
+            rcc.appendChild(para);
+
+            var str = textPrefix[j] + app[keys[j]];
+            var t = document.createTextNode(str);
+            rcc.appendChild(t);
+        }
+
+        var para = document.createElement("P");
+        rcc.appendChild(para);
+
+        var buttonNames = ['编辑', '预览', '删除'];
+        for (var m = 0; m < buttonNames.length; m++) {
+            var btn = document.createElement("BUTTON");
+            var t = document.createTextNode(buttonNames[m]);
+            btn.appendChild(t);
+            rcc.appendChild(btn);
+        }
+
+        relativeDiv.appendChild(rc);
+    }
 }
 
-function myChange() {
-    oFiles = document.getElementById("file").files;
-    f = oFiles[0];
-    // f = extractPlist(f);
-    uploadIpa(f);
-}
-
-function extractPlist(file) {
-    var zip = new JSZip();
-    zip.file("Hello.txt", "Hello World\n");
-    var plist = zip.folder("images");
-    img.file("smile.gif", imgData, { base64: true });
-    zip.generateAsync({ type: "blob" })
-        .then(function(content) {
-            // see FileSaver.js
-            saveAs(content, "example.zip");
-        });
-    return file;
-}
-
-function uploadPlist(files) {
+function uploadPlist(file) {
     var formData = new FormData();
     formData.append('platformType', 'iOS');
-    formData.append('plist', files[0]);
+    formData.append('plist', file);
 
     var url = '/parseAppInfo';
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    xhr.onload = function(e) {
-        alert(e);
-    };
-    xhr.send(formData);
+    sendPostRequest(url, null, formData, function(xhr) {
+        hideLoadingView();
+
+        bootbox.confirm({
+            title: "App信息",
+            message: xhr.response,
+            // className: 'bb-alternate-modal',
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> 取消'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> 上传'
+                }
+            },
+            callback: function(result) {
+                console.log('This was logged in the callback: ' + result);
+            }
+        });
+    }, function(xhr) {});
+
 }
 
 function uploadMiniAPK(file, fileName) {
@@ -112,7 +121,11 @@ function uploadMiniAPK(file, fileName) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function(e) {
-        alert(e);
+        hideLoadingView();
+        bootbox.alert({
+            message: "This is an alert with an additional class!",
+            className: 'bb-alternate-modal'
+        });
     };
     xhr.send(formData);
 }
@@ -134,19 +147,24 @@ function uploadIpa(files) {
     xhr.send(formData);
 }
 
-function handleFile(files) {
-    var fullPath = document.getElementById('file2').value;
-    var platformType = platformTypeWithFilePath(fullPath);
+function handleFiles(files) {
+    loadingView = showLoadingWithMessage();
+
+    var file = files[0];
+    var platformType = platformTypeWithFileName(file.name);
+
     if (platformType === 'iOS') {
-        alert(platformType);
+        handleIPA(file);
     } else if (platformType === 'Android') {
-        handleAPK(files[0]);
-    } else {}
+        handleAPK(file);
+    } else {
+        hideLoadingView();
+    }
 }
 
-function platformTypeWithFilePath(fullPath) {
+function platformTypeWithFileName(fielName) {
     var re = /(?:\.([^.]+))?$/;
-    var fileExtension = re.exec(fullPath)[1].toUpperCase();
+    var fileExtension = re.exec(fielName)[1].toUpperCase();
     if (fileExtension === 'IPA') {
         return 'iOS'
     } else if (fileExtension === 'APK') {
@@ -154,6 +172,28 @@ function platformTypeWithFilePath(fullPath) {
     } else {
         return '';
     }
+}
+
+function handleIPA(file) {
+    var new_zip = new JSZip();
+    new_zip.loadAsync(file).then(function(zip) {
+            var plists = zip.file(/Payload\/[^/]+.app\/Info.plist/);
+            if (plists.length > 0) {
+                var plist = plists[0];
+                console.log(plist);
+                var uploadZip = new JSZip();
+                uploadZip.file('Info.plist', plist._data);
+                uploadZip.generateAsync({
+                    type: "blob",
+                    compression: "DEFLATE"
+                }).then(function(content) {
+                    uploadPlist(content, 'Info.plist');
+                });
+            }
+        },
+        function(e) {
+
+        });
 }
 
 function handleAPK(file) {
@@ -186,4 +226,15 @@ function openapp() {
     setTimeout(function() {
         window.location = 'https://www.google.com'; //如果超时就跳转到app下载页
     }, 500);
+}
+
+// alert
+function showLoadingWithMessage() {
+    return bootbox.dialog({
+        message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Loading...</div>'
+    })
+}
+
+function hideLoadingView() {
+    loadingView.modal('hide');
 }
