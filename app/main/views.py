@@ -12,6 +12,7 @@ from .util import FileManager
 from . import main, app_file
 from .. import db
 from ..models import User, App, AppVersionInfo
+from .util import request_helper
 
 
 @main.route('/favicon.ico')
@@ -23,6 +24,7 @@ def favicon():
 @login_required
 def index():
     return redirect('/home')
+
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -60,7 +62,7 @@ def logout():
     return redirect(url_for('main.login'))
 
 @main.route('/home')
-# @login_required
+@login_required
 def home():
     return render_template('homepage.html')
 
@@ -71,8 +73,62 @@ def apps():
     if (request.method == 'GET'):
         return render_template('apps.html')
 
+    # TODO: 区分是否登录
+    apps = []
+    user_agent = request.headers.get('User-Agent')
+    if 'iOS' in user_agent or 'iPhone' in user_agent or 'iPad' in user_agent:
+        apps = App.query.filter_by(app_platform='iOS').all()
+        pass
+    elif 'Android' in user_agent:
+        apps = App.query.filter_by(app_platform='Android').all()
+        pass
+    else:
+        user_id = session.get('user_id')
+        apps = App.query.filter_by(owner=user_id).all()
+        pass
+
+    appList = []
+    for app in apps:
+        appList.append(app.convert_to_dict())
+
+    response = {
+        'isOk': True,
+        'apps': appList
+    }
+    return jsonify(response)
+
+@main.route('/store/apps', methods=['GET', 'POST'])
+def store_apps():
+    if (request.method == 'GET'):
+        return render_template('apps.html')
+
+    request.headers.get('User-Agent')
+
     user_id = session.get('user_id')
     apps = App.query.filter_by(owner=user_id).all()
+    appList = []
+    for app in apps:
+        appList.append(app.convert_to_dict())
+
+    response = {
+        'isOk': True,
+        'apps': appList
+    }
+    return jsonify(response)
+
+@main.route('/appversion', methods=['GET', 'POST'])
+def version_info():
+    if (request.method == 'GET'):
+        return render_template('appversion.html')
+
+    user_agent = request.headers.get('User-Agent')
+    platform_type = request_helper.os_type(user_agent)
+
+    apps = AppVersionInfo.query.filter_by(app_platform=platform_type,app_id=request.form.get('appID')).all()
+    # request.headers.get('User-Agent')
+    #
+    # user_id = session.get('user_id')
+    # apps = App.query.filter_by(owner=user_id).all()
     appList = []
     for app in apps:
         appList.append(app.convert_to_dict())
@@ -123,7 +179,8 @@ def app_upload():
             db.session.add(app)
         app_version = AppVersionInfo.query.filter_by(build=version_number, version=version_code, app_id=app_id).first()
         if not app_version:
-            app_version = AppVersionInfo(build=version_number,
+            app_version = AppVersionInfo(app_platform=platform_type,
+                                         build=version_number,
                                          version=version_code,
                                          update_log=form.get('updateLog'),
                                          create_time=create_time,
@@ -136,9 +193,12 @@ def app_upload():
             db.session.merge(app_version)
         db.session.commit()
 
-        return jsonify(
-            isOk=True
-        )
+        app_version = AppVersionInfo.query.filter_by(app_platform=platform_type, app_id=app_id).order_by(AppVersionInfo.build.desc()).first()
+        app_version = app_version.convert_to_dict()
+        app_version['download_count'] = app.download_count
+
+        app_version['isOk'] = True
+        return jsonify(app_version)
     else:
         return jsonify(
             isOk=False

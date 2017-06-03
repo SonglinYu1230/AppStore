@@ -15,7 +15,10 @@
     <!--winphone系统a、input标签被点击时产生的半透明灰色背景怎么去掉-->
     <meta name="msapplication-tap-highlight" content="no">
     <link rel="stylesheet" href="/static/css/apps.css">
-
+    <script type="text/javascript" src="/static/js/util/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/util/request.js"></script>
+    <script type="text/javascript" src="/static/js/util/loading.js"></script>
+    <script type="text/javascript" src="/static/js/app.js"></script>
     <script>
         function size() {
             var Wwidth = $(window).width();
@@ -52,5 +55,13 @@
         <p class="support">网站由<a href="https://github.com/yumumu/AppStore">AppStore</a>项目支持</p>
     </div>
 </body>
+
+<script>
+    loadApps();
+    window.onload = function() {
+        window.status = "Page is loaded";
+        console.log('on load');
+    }
+</script>
 
 </html>

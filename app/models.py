@@ -41,6 +41,7 @@ class App(db.Model):
 
 class AppVersionInfo(db.Model):
     __table__name = 'app_version_info'
+    app_platform = db.Column(db.String(16), nullable=False, primary_key=True)
     build = db.Column(db.String(64), nullable=False, primary_key=True)
     version = db.Column(db.String(64), nullable=False, primary_key=True)
     update_log = db.Column(db.Text)
