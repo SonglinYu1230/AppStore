@@ -68,15 +68,16 @@ def save_blob_file(temp_file, file_name, session_id):
     os.makedirs(save_path, exist_ok=True)
     blob_path = os.path.join(save_path, file_name)
     temp_file.save(blob_path)
+    return blob_path
 
+
+def get_plist_path(blob_path):
+    head, tail = os.path.split(blob_path)
     zip_ref = zipfile.ZipFile(blob_path, 'r')
-    zip_ref.extractall(save_path)
+    zip_ref.extractall(head)
     zip_ref.close()
 
-    os.remove(blob_path)
-
-    return os.path.join(save_path, 'Info.plist')
-    pass
+    return os.path.join(head, 'Info.plist')
 
 def delete_file(file_path):
     pass

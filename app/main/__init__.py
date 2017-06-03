@@ -22,7 +22,10 @@ main.before_request(before_request)
 @main.after_request
 def after_request(response):
     print(who_am_i())
+    print('*******************after_request start************************')
+    print(request)
     print(response)
+    print('*******************after_request end************************')
     return response
 
 # 在此处导入是为了避免循环导入依赖，因为在views.py和errors.py中还要导入蓝本main

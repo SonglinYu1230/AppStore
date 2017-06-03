@@ -24,7 +24,6 @@ def favicon():
 def index():
     return redirect('/home')
 
-
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -104,9 +103,10 @@ def parse_app_Info():
 def app_upload():
     form = request.form
     user_id = session.get('user_id')
-    platform_type = form['platformType']
-    app_id = form['appID']
-    version_number = form['versionNumber']
+    platform_type = form.get('platformType')
+    app_id = form.get('appID')
+    version_number = form.get('versionNumber')
+    version_code = form.get('versionCode')
     save_result = FileManager.save_user_file(user_id, platform_type,
                                              app_id, version_number, request.files['app'])
 
@@ -115,31 +115,34 @@ def app_upload():
         create_time = datetime.datetime.now()
         if not app:
             app = App(id=app_id,
-                      name=form['appName'],
+                      name=form.get('appName'),
                       app_platform=platform_type,
                       owner=int(user_id),
                       create_time=create_time
                       )
             db.session.add(app)
-        app_version = AppVersionInfo.query.filter_by(build=version_number, version=form['versionCode'], app_id=app_id).first()
+        app_version = AppVersionInfo.query.filter_by(build=version_number, version=version_code, app_id=app_id).first()
         if not app_version:
             app_version = AppVersionInfo(build=version_number,
-                                         version=form['versionCode'],
-                                         update_log=form['updateLog'],
+                                         version=version_code,
+                                         update_log=form.get('updateLog'),
                                          create_time=create_time,
                                          app_id=app_id
                                          )
             db.session.add(app_version)
         else:
-            app_version.update_log = 'Testtttttt'
+            app_version.update_log = ''
             app_version.create_time = create_time
             db.session.merge(app_version)
         db.session.commit()
+
+        return jsonify(
+            isOk=True
+        )
     else:
-        pass
-
-    return jsonify({'status': 'OK'})
-
+        return jsonify(
+            isOk=False
+        )
 
 
 @app_file.route('/test')
@@ -151,8 +154,9 @@ def static_file_parser():
 
 
 def parse_plist_info(plist_file):
-    temp_path = FileManager.save_blob_file(plist_file, 'blob', session.get('_id'))
-
+    temp_blob_path = FileManager.save_blob_file(plist_file, 'blob', session.get('_id'))
+    temp_path = FileManager.get_plist_path(temp_blob_path)
+    os.remove(temp_blob_path)
     with open(temp_path, 'rb') as f:
         parse_result = IPAPKParser.plist_info(f.read())
         os.remove(temp_path)

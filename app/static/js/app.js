@@ -1,4 +1,5 @@
 var loadingView;
+var currentApp;
 
 function signin() {
     var url = "/login";
@@ -40,9 +41,6 @@ function loadApps() {
 }
 
 function insertApps(apps) {
-    Array.prototype.push.apply(apps, apps);
-    Array.prototype.push.apply(apps, apps);
-
     var relativeDiv = document.getElementById("middle-container");
     for (var i = 0; i < apps.length; i++) {
         var rc = document.createElement("div");
@@ -87,10 +85,25 @@ function uploadPlist(file) {
     formData.append('platformType', 'iOS');
     formData.append('plist', file);
 
+    uploadParsedInfo(formData, 'iOS');
+}
+
+
+function uploadMiniAPK(file, fileName) {
+    var formData = new FormData();
+    formData.append('platformType', 'Android');
+    formData.append('fileName', fileName);
+    formData.append('miniAPK', file);
+
+    uploadParsedInfo(formData, 'Android');
+}
+
+function uploadParsedInfo(formData, platformtype) {
     var url = '/parseAppInfo';
     sendPostRequest(url, null, formData, function(xhr) {
         hideLoadingView();
-
+        var jsonObject = JSON.parse(xhr.response);
+        jsonObject['platformType'] = platformtype;
         bootbox.confirm({
             title: "App信息",
             message: xhr.response,
@@ -104,60 +117,46 @@ function uploadPlist(file) {
                 }
             },
             callback: function(result) {
-                console.log('This was logged in the callback: ' + result);
+                if (result) {
+                    uploadApp(jsonObject);
+                }
             }
         });
     }, function(xhr) {});
-
 }
 
-function uploadMiniAPK(file, fileName) {
+function uploadApp(jsonObject) {
     var formData = new FormData();
-    formData.append('platformType', 'Android');
-    formData.append('fileName', fileName);
-    formData.append('miniAPK', file);
+    formData.append('platformType', jsonObject['platformType']);
+    formData.append('appID', jsonObject['bundle_id']);
+    formData.append('versionNumber', jsonObject['builder_number']);
+    formData.append('versionCode', jsonObject['version_number']);
+    formData.append('appName', jsonObject['app_name']);
+    formData.append('app', currentApp);
 
-    var url = '/parseAppInfo';
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    xhr.onload = function(e) {
+    showLoadingWithMessage();
+    var url = '/uploadApp';
+    sendPostRequest(url, null, formData, function(xhr) {
         hideLoadingView();
-        bootbox.alert({
-            message: "This is an alert with an additional class!",
-            className: 'bb-alternate-modal'
-        });
-    };
-    xhr.send(formData);
-}
-
-function uploadIpa(files) {
-    var formData = new FormData();
-    formData.append('platformType', 'iOS');
-    formData.append('appID', 'com.app.test');
-    formData.append('versionNumber', 333);
-    formData.append('versionCode', '1.1.1');
-    formData.append('appName', 'TestAPP');
-    formData.append('app', files[0]);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/uploadApp', true);
-    xhr.onload = function(e) {
-        alert(e);
-    };
-    xhr.send(formData);
+        currentApp = '';
+    }, function(xhr) {
+        hideLoadingView();
+        currentApp = '';
+    });
 }
 
 function handleFiles(files) {
-    loadingView = showLoadingWithMessage();
+    showLoadingWithMessage();
 
-    var file = files[0];
-    var platformType = platformTypeWithFileName(file.name);
+    currentApp = files[0];
+    var platformType = platformTypeWithFileName(currentApp.name);
 
     if (platformType === 'iOS') {
-        handleIPA(file);
+        handleIPA(currentApp);
     } else if (platformType === 'Android') {
-        handleAPK(file);
+        handleAPK(currentApp);
     } else {
+        currentApp = '';
         hideLoadingView();
     }
 }
@@ -221,16 +220,9 @@ function handleAPK(file) {
         });
 }
 
-function openapp() {
-    window.location = "weixin://1123"; //打开某手机上的某个app应用
-    setTimeout(function() {
-        window.location = 'https://www.google.com'; //如果超时就跳转到app下载页
-    }, 500);
-}
-
 // alert
 function showLoadingWithMessage() {
-    return bootbox.dialog({
+    loadingView = bootbox.dialog({
         message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Loading...</div>'
     })
 }
