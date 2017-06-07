@@ -33,6 +33,12 @@ def after_request(response):
     print('*' * 20 + who_am_i() + '    end' + '*' * 20)
     return response
 
+@app_file.after_request
+def after_request(response):
+    # print(response.headers.get('Content-Disposition').get('filename'))
+    # response.headers["Content-Type"] = "application/download"
+    print(response)
+    return response
 
 # 在此处导入是为了避免循环导入依赖，因为在views.py和errors.py中还要导入蓝本main
 from . import views, errors

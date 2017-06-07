@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div id="container">
 
 
 
@@ -21,8 +21,9 @@
 </body>
 
 <script>
-    var params = getUrlVars();
-    loadAppVersions(params['appID']);
+    var appID = getParameterByName('appID');
+    console.log(appID);
+    loadAppVersions(appID);
     window.onload = function() {
         window.status = "Page is loaded";
         console.log('on load');

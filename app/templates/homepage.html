@@ -45,7 +45,8 @@
 
         <div class="rectangle-container">
             <div class="rectangle upload">
-                <input type="file" accept=".apk, .ipa" onchange="handleFiles(this.files)">
+                <input id="file" clsss="inputfile" name="file" type="file" accept=".apk, .ipa" onchange="handleFiles(this.files)">
+                <label for="file">Choose a file</label>
             </div>
         </div>
 

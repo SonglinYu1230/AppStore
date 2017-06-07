@@ -8,7 +8,7 @@ function loadApps() {
         data: null,
         success: function(data, status, request) {
             // alert(data);
-            if (data['isOk']) {
+            if (data['isOK']) {
                 insertApps(data['apps']);
             }
         },
@@ -107,8 +107,8 @@ function uploadApp(jsonObject) {
     var formData = new FormData();
     formData.append('platformType', jsonObject['platformType']);
     formData.append('appID', jsonObject['bundle_id']);
-    formData.append('versionNumber', jsonObject['build_number']);
-    formData.append('versionCode', jsonObject['version_number']);
+    formData.append('versionNumber', jsonObject['version_number']);
+    formData.append('buildNumber', jsonObject['build_number']);
     formData.append('appName', jsonObject['app_name']);
     formData.append('app', currentApp);
 

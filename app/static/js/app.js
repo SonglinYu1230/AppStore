@@ -6,7 +6,7 @@ function loadApps() {
         data: null,
         success: function(data, status, request) {
             // alert(data);
-            if (data['isOk']) {
+            if (data['isOK']) {
                 str = JSON.stringify(data)
                 alert(str);
             }

@@ -15,7 +15,7 @@ function signin() {
         url: url,
         data: userInfo,
         success: function(data, status, request) {
-            if (data['isOk']) {
+            if (data['isOK']) {
                 window.location.href = '/home';
             }
         },

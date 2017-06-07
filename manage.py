@@ -3,7 +3,6 @@
 # Created by why001 on 14/05/2017
 # 用于启动程序以及其它的程序任务
 
-import os
 from app import create_app, db
 from app.models import User, App, AppVersionInfo, Group # 在这里导入，不然创建的database没有表, 20170603
 from flask_script import Manager, Server, Shell

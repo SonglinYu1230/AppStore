@@ -5,7 +5,7 @@
 import datetime
 import os
 from flask import request, session, render_template, \
-    url_for, abort, Response, jsonify, redirect, g, json
+    url_for, abort, Response, jsonify, redirect, g, json, send_from_directory
 from flask_login import login_user, logout_user, login_required, current_user
 from .util import IPAPKParser
 from .util import FileManager
@@ -13,7 +13,7 @@ from . import main, app_file
 from .. import db
 from ..models import User, App, AppVersionInfo
 from .util import request_helper
-
+from config import base_dir
 
 @main.route('/favicon.ico')
 def favicon():
@@ -45,10 +45,10 @@ def login():
                     # return redirect(url_for('main.home'))
 
                     return jsonify(
-                        isOk=True
+                        isOK=True
                     )
             return jsonify(
-                isOk=False,
+                isOK=False,
                 errMsg='user not found'
             )
         else:
@@ -92,10 +92,15 @@ def apps():
         appList.append(app.convert_to_dict())
 
     response = {
-        'isOk': True,
+        'isOK': True,
         'apps': appList
     }
     return jsonify(response)
+
+@main.route('/store/app/<path:path>', methods=['GET', 'POST'])
+def app_version_info(path):
+    return render_template(path)
+    pass
 
 @main.route('/store/apps', methods=['GET', 'POST'])
 def store_apps():
@@ -111,16 +116,13 @@ def store_apps():
         appList.append(app.convert_to_dict())
 
     response = {
-        'isOk': True,
+        'isOK': True,
         'apps': appList
     }
     return jsonify(response)
 
-@main.route('/appversion', methods=['GET', 'POST'])
+@main.route('/appversion', methods=['POST'])
 def version_info():
-    if (request.method == 'GET'):
-        return render_template('appversion.html')
-
     user_agent = request.headers.get('User-Agent')
     platform_type = request_helper.os_type(user_agent)
 
@@ -134,7 +136,7 @@ def version_info():
         appList.append(app.convert_to_dict())
 
     response = {
-        'isOk': True,
+        'isOK': True,
         'apps': appList
     }
     return jsonify(response)
@@ -150,7 +152,7 @@ def parse_app_Info():
         response.update(parse_miniAPK(request.files['miniAPK'], request.form['fileName']))
     else:
         return 'Error'
-    response['isOk'] = True
+    response['isOK'] = True
     return jsonify(response)
 
 
@@ -162,7 +164,7 @@ def app_upload():
     platform_type = form.get('platformType')
     app_id = form.get('appID')
     version_number = form.get('versionNumber')
-    version_code = form.get('versionCode')
+    build_number = form.get('buildNumber')
     save_result = FileManager.save_user_file(user_id, platform_type,
                                              app_id, version_number, request.files['app'])
 
@@ -177,11 +179,11 @@ def app_upload():
                       create_time=create_time
                       )
             db.session.add(app)
-        app_version = AppVersionInfo.query.filter_by(build=version_number, version=version_code, app_id=app_id).first()
+        app_version = AppVersionInfo.query.filter_by(build=build_number, version=version_number, app_id=app_id).first()
         if not app_version:
             app_version = AppVersionInfo(app_platform=platform_type,
-                                         build=version_number,
-                                         version=version_code,
+                                         build=build_number,
+                                         version=version_number,
                                          update_log=form.get('updateLog'),
                                          create_time=create_time,
                                          app_id=app_id
@@ -196,20 +198,39 @@ def app_upload():
         app_version = AppVersionInfo.query.filter_by(app_platform=platform_type, app_id=app_id).order_by(AppVersionInfo.build.desc()).first()
         app_version = app_version.convert_to_dict()
         app_version['download_count'] = app.download_count
+        app_version['name'] = app.name
 
-        app_version['isOk'] = True
+        app_version['isOK'] = True
         return jsonify(app_version)
     else:
         return jsonify(
-            isOk=False
+            isOK=False
         )
+
+@app_file.route('/download/app', methods=['POST'])
+def download():
+
+    app_info = request.json
+
+    app_platform = app_info.get('app_platform')
+    app_id = app_info.get('app_id')
+    build = app_info.get('build')
+    # TODO: 设计有问题，如果用user_id作为目录的一部分，未登录用户不能下载
+    user_id = session.get('user_id')
+    file_path = str('1') + '/' + app_platform + '/' + app_id + '/' + str(build)
+    file_path += '/shadowsocks-nightly-3.2.4.apk'
+
+    response = {
+        'redirect': url_for('app_file.static', filename=file_path),
+    }
+    return jsonify(response), 278
 
 
 @app_file.route('/test')
 def static_file_parser():
     print('this is it')
     return jsonify(
-        isOk=True
+        isOK=True
     )
 
 

@@ -50,13 +50,13 @@ def plist_info(plist_path):
     # plist_file = zipfile.ZipFile(plist_path)
     # plist_data = plist_file.read(plist_path)
     plist_root = plistlib.loads(plist_path)
-    version_number =   plist_root['CFBundleVersion']
-    builder_number =  plist_root['CFBundleShortVersionString']
+    version_number =   plist_root['CFBundleShortVersionString']
+    build_number =  plist_root['CFBundleVersion']
     app_name = plist_root['CFBundleDisplayName']
     bundle_id = plist_root['CFBundleIdentifier']
     return {
         'version_number': version_number,
-        'builder_number': builder_number,
+        'build_number': build_number,
         'app_name': app_name,
         'bundle_id': bundle_id
     }
@@ -95,7 +95,7 @@ def parse_xml(xml_path):
 
     return {
         'version_number': version_name,
-        'builder_number': version_code,
+        'build_number': version_code,
         'bundle_id': package
     }
 
