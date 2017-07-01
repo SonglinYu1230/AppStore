@@ -39,15 +39,57 @@ function downloadApp() {
         url: url,
         data: JSON.stringify(app),
         success: function(data) {
+
             console.log(data);
             if (data.redirect) {
-                window.location = data.redirect;
+                handleRedirct(data.redirect)
             }
         },
         contentType: 'application/json',
         dataType: 'json',
     });
 
+}
+
+function handleRedirct(redirect) {
+    var os = getMobileOperatingSystem();
+    if (os === 'iOS') {
+        // var url = window.location;
+        // var baseUrl = url.protocol + "//" + url.host;
+        // var destUrl = baseUrl + redirect
+        // console.log(url);
+        // console.log(baseUrl);
+        // console.log(destUrl);
+        // "itms-services://?action=download-manifest&url=https://xxx.xxx.xxx/xxx.plist"
+        var itmsUrl = 'itms-services://?action=download-manifest&url=' + redirect;
+        // alert(itmsUrl);
+        console.log(itmsUrl);
+        window.location = itmsUrl;
+    } else if (os === 'Android') {
+        window.location = redirect;
+    } else [
+
+    ]
+}
+
+function getMobileOperatingSystem() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+
+    return "unknown";
 }
 
 function getParameterByName(name, url) {

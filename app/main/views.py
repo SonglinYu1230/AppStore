@@ -166,7 +166,7 @@ def app_upload():
     version_number = form.get('versionNumber')
     build_number = form.get('buildNumber')
     save_result = FileManager.save_user_file(user_id, platform_type,
-                                             app_id, version_number, request.files['app'])
+                                             app_id, build_number, request.files['app'])
 
     if save_result:
         app = App.query.filter_by(id=app_id).first()
@@ -217,11 +217,26 @@ def download():
     build = app_info.get('build')
     # TODO: 设计有问题，如果用user_id作为目录的一部分，未登录用户不能下载
     user_id = session.get('user_id')
-    file_path = str('1') + '/' + app_platform + '/' + app_id + '/' + str(build)
-    file_path += '/shadowsocks-nightly-3.2.4.apk'
+    relative_path = str('1') + '/' + app_platform + '/' + app_id + '/' + str(build)
+
+    if app_platform == 'iOS':
+        temp_path = 'AppFiles/' + relative_path
+        file_path = os.path.join(base_dir, temp_path)
+        os.chdir(file_path)
+        import glob
+        results = glob.glob('manifest.plist')
+        if len(results) > 0:
+            relative_path = os.path.join(relative_path, results[0])
+            # "itms-services://?action=download-manifest&url=https://xxx.xxx.xxx/xxx.plist"
+            # ipa_url = url_for('app_file.static', filename=relative_path)
+            # relative_path = 'itms-services://?action=download-manifest&url=' + ipa_url
+    elif app_platform == 'Android':
+        # TODO: 目前测试下载
+        relative_path += '/shadowsocks-nightly-3.2.4.apk'
+        # download_url = url_for('app_file.static', filename=relative_path)
 
     response = {
-        'redirect': url_for('app_file.static', filename=file_path),
+        'redirect': url_for('app_file.static', filename=relative_path, _external=True, _scheme='https'),
     }
     return jsonify(response), 278
 
